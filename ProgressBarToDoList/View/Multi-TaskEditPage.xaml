@@ -1,0 +1,117 @@
+﻿<Page
+    x:Class="ProgressBarToDoList.View.Multi_TaskEditPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ProgressBarToDoList.View"
+    xmlns:converter="using:ProgressBarToDoList.Convert"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:module="using:ProgressBarToDoList.Module"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <converter:StringToDateTime  x:Key="StringToDateTime"/>
+
+        <Style TargetType="StackPanel" x:Key="HStackPanel">
+            <Setter Property="Margin" Value="10 5 0 5" />
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </Page.Resources>
+
+
+    <Page.BottomAppBar>
+        <CommandBar ClosedDisplayMode="Compact">
+            <AppBarButton Name="AcceptButton" Click="AcceptButton_OnClick" Label="确定" Icon="Accept" IsCompact="True" />
+            <AppBarButton Name="CancelButton" Click="CancelButton_OnClick" Label="取消" Icon="Cancel" IsCompact="True" />
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <ScrollViewer Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel>
+
+            <TextBlock Margin="10" Text="任务编辑" FontSize="20" />
+            <StackPanel Style="{StaticResource HStackPanel}" Orientation="Horizontal">
+                <TextBlock Text="分组:" />
+                <ComboBox Name="GroupBox" PlaceholderText="{x:Bind _multiTaskItem.Group}" />
+            </StackPanel>
+            <StackPanel Style="{StaticResource HStackPanel}" Orientation="Horizontal">
+                <TextBlock Text="任务名称:" />
+                <TextBox PlaceholderText="暑假计划" Text="{x:Bind _multiTaskItem.TaskName}" Name="TaskNameTextBox" />
+
+            </StackPanel>
+
+            <TextBlock Margin="10 5 0 5" Text="任务列表:" FontSize="17" />
+
+
+            <ListView  Name="SimpleTaskList" ItemsSource="{x:Bind _simpleTaskItems,Mode=TwoWay}">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="Margin" Value="5" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="module:SimpleTaskItem">
+                        <UserControl>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="1*" />
+                                </Grid.ColumnDefinitions>
+
+                                <CheckBox IsChecked="{x:Bind IsComplete,Mode=TwoWay}" Grid.Row="2" Content="已完成"
+                                        Grid.Column="1"  FlowDirection="RightToLeft" HorizontalAlignment="Right" />
+
+                                <Button Name="DeleteButton"  Click="DeleteButton_OnClick" Background="Transparent" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="1" FontFamily="Segoe MDL2 Assets" Content="&#xE107;"/>
+
+                                <StackPanel Grid.ColumnSpan="2" Style="{StaticResource HStackPanel}"
+                                            Orientation="Horizontal">
+                                    <TextBlock VerticalAlignment="Center" Text="任务名称" />
+                                    <TextBox PlaceholderText="考驾照成为老司机" Text="{x:Bind TaskName,Mode=TwoWay}" />
+                                </StackPanel>
+
+
+                                <TextBox Margin="10 5 0 5" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                         Text="{x:Bind Note,Mode=TwoWay}"
+                                         Header="任务说明" />
+                                <StackPanel Margin="10 5 0 5" Orientation="Horizontal" Grid.Column="0" Grid.Row="2">
+                                    <TextBlock VerticalAlignment="Center" Text="权重" />
+                                    <TextBox Text="{x:Bind Weight,Mode=TwoWay}" InputScope="Number" />
+                                </StackPanel>
+
+
+
+                            </Grid>
+                        </UserControl>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <Button Click="ButtonBase_OnClick" Margin="10 5 0 5" Content="添加任务" />
+
+            <StackPanel Style="{StaticResource HStackPanel}" Orientation="Horizontal">
+                <TextBlock Text="截止日期：" />
+                <CalendarDatePicker Date="{x:Bind _multiTaskItem.DeadLine,Converter={StaticResource StringToDateTime }}"  Name="CalendarDatePicker" />
+            </StackPanel>
+
+            <StackPanel Style="{StaticResource HStackPanel}" Orientation="Horizontal">
+                <TextBlock Text="任务完成时可获得" />
+                <TextBox Name="Dopamine" Text="{x:Bind _multiTaskItem.Dopamine}" PlaceholderText="10"
+                         InputScope="Number" />
+                <TextBlock Text="多巴胺" />
+            </StackPanel>
+
+            <TextBlock Margin="10 5 0 5" Text="任务说明" />
+            <TextBox Text="{x:Bind _multiTaskItem.Note}" Margin="10 0 10 10 " Name="NoteBox" TextWrapping="Wrap"
+                     Height="100" />
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>
